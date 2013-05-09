@@ -93,14 +93,14 @@
 
 			function MyRoomRequestListener() {
 				this.onSubscribeRoomDone = function(event){
-						console.log('Join room result ' +event.result);
+						console.log('subscribe room result ' +event.result);
 						WarpClient.joinRoom(roomId);
 				};
 				this.onUnsubscribeRoomDone = function(event){
 						console.log('Unsubscribe room result ' +event.result);
 				};
 				this.onJoinRoomDone = function(event){
-						console.log('subscribe room result ' +event.result);
+						console.log('Join room result ' +event.result);
 						$("#game").show();
 						$("#game").html("Waiting for other player to join");
 				};
