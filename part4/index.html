@@ -42,7 +42,7 @@
 						{
 							turn = Math.floor((Math.random()*6)+1);
 							WarpClient.sendChat(turn);
-							$("#game").html($("#game").html()+"<br>You throughed the dice and got "+turn);
+							$("#game").html($("#game").html()+"<br>You throwed the dice and got "+turn);
 						}
 				};
 				this.onUserLeftLobby = function(lobbydata, user){
@@ -58,7 +58,7 @@
 							if(turn > -1)
 							{
 								var oturn = parseInt(chatevent.chat);
-								$("#game").html($("#game").html()+"<br>"+chatevent.sender+" throughed the dice and got "+oturn);
+								$("#game").html($("#game").html()+"<br>"+chatevent.sender+" throwed the dice and got "+oturn);
 
 								if(turn > oturn)
 									$("#game").html($("#game").html()+"<br>You won");
@@ -71,10 +71,10 @@
 							{
 								turn = Math.floor((Math.random()*6)+1);
 								WarpClient.sendChat(turn);
-								$("#game").html($("#game").html()+"<br>You throughed the dice and got "+turn);
+								$("#game").html($("#game").html()+"<br>You throwed the dice and got "+turn);
 
 								var oturn = parseInt(chatevent.chat);
-								$("#game").html($("#game").html()+"<br>"+chatevent.sender+" throughed the dice and got "+oturn);
+								$("#game").html($("#game").html()+"<br>"+chatevent.sender+" throwed the dice and got "+oturn);
 
 								if(turn > oturn)
 									$("#game").html($("#game").html()+"<br>You won");
