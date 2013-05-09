@@ -1,0 +1,147 @@
+<html>
+	<head>
+		<title>AppWarp Tutorial Part-4</title>
+		<script type="text/javascript" src="js/AppWarpClientSDK.js"></script>
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script>
+			var apiKey = "put your api key here";
+			var secretKey = "put your secret key here";
+			var roomId = "612183398";
+
+			var player, turn=-1;
+
+			function MyConnectionRequestListener() {
+				this.onConnectDone = function(result){
+						console.log('connection result ' +result);
+						WarpClient.joinZone(player);
+				};
+				
+				this.onJoinZoneDone = function(result){
+						console.log('joinzone result ' +result);
+						WarpClient.subscribeRoom(roomId);
+				};
+				
+				this.onDisconnectDone = function(result){
+						console.log('disconnect result ' +result);
+				};	
+			}
+
+			function MyNotificationListener() {
+				this.onRoomCreated = function(roomdata){
+						console.log('subscribe room ' +roomdata.id);
+				};
+				this.onRoomDestroyed = function(roomdata){
+						console.log('Unsubscribe room ' +roomdata.id);
+				};
+				this.onUserLeftRoom = function(roomdata, user){
+						console.log('Left room ' +roomdata.id);
+				};
+				this.onUserJoinedRoom = function(roomdata, user){
+						console.log('joined room ' +roomdata.id);
+						if(player != user)
+						{
+							turn = Math.floor((Math.random()*6)+1);
+							WarpClient.sendChat(turn);
+							$("#game").html($("#game").html()+"<br>You throughed the dice and got "+turn);
+						}
+				};
+				this.onUserLeftLobby = function(lobbydata, user){
+						console.log('user left lobby ' +user);
+				};
+				this.onUserJoinedLobby = function(lobbydata, user){
+						console.log('user joined lobby' +user);
+				};
+				this.onChatReceived = function(chatevent){
+						console.log(chatevent.sender +' says ' +chatevent.chat);
+						if(chatevent.sender != player)
+						{
+							if(turn > -1)
+							{
+								var oturn = parseInt(chatevent.chat);
+								$("#game").html($("#game").html()+"<br>"+chatevent.sender+" throughed the dice and got "+oturn);
+
+								if(turn > oturn)
+									$("#game").html($("#game").html()+"<br>You won");
+								else if(turn == oturn)
+									$("#game").html($("#game").html()+"<br>Game Draw");
+								else
+									$("#game").html($("#game").html()+"<br>"+chatevent.sender+" won");
+							}
+							else
+							{
+								turn = Math.floor((Math.random()*6)+1);
+								WarpClient.sendChat(turn);
+								$("#game").html($("#game").html()+"<br>You throughed the dice and got "+turn);
+
+								var oturn = parseInt(chatevent.chat);
+								$("#game").html($("#game").html()+"<br>"+chatevent.sender+" throughed the dice and got "+oturn);
+
+								if(turn > oturn)
+									$("#game").html($("#game").html()+"<br>You won");
+								else if(turn == oturn)
+									$("#game").html($("#game").html()+"<br>Game Draw");
+								else
+									$("#game").html($("#game").html()+"<br>"+chatevent.sender+" won");
+							}
+
+						}
+				};
+				this.onUpdatePeersReceived = function(updateevent){
+						console.log('Got updatepeers with bytes ' +updateevent.update.length);
+				};	
+			}
+
+			function MyRoomRequestListener() {
+				this.onSubscribeRoomDone = function(event){
+						console.log('Join room result ' +event.result);
+						WarpClient.joinRoom(roomId);
+				};
+				this.onUnsubscribeRoomDone = function(event){
+						console.log('Unsubscribe room result ' +event.result);
+				};
+				this.onJoinRoomDone = function(event){
+						console.log('subscribe room result ' +event.result);
+						$("#game").show();
+						$("#game").html("Waiting for other player to join");
+				};
+				this.onLeaveRoomDone = function(event){
+						console.log('Leave room result ' +event.result);
+				};
+				this.onGetLiveRoomInfoDone = function(event){
+					if(event.result == resultcode_success){
+							console.log('Count of users in room ' +event.roomdata.id + ' is ' + event.userNameArray.length);
+					}		
+				};
+				this.onSetCustomRoomDataDone = function(event){
+						console.log('Set Custom room data result ' +event.result);
+				};
+				
+			}
+
+
+			WarpClient.initialize(apiKey, secretKey);
+			WarpClient.addConnectionRequestListener(new MyConnectionRequestListener());
+			WarpClient.addNotificationListener(new MyNotificationListener());
+			WarpClient.addRoomRequestListener(new MyRoomRequestListener());
+
+			$(document).ready(function(){
+
+				$("#game").hide();
+
+				$("#userbutton").click(function(){
+					$("#userlogin").hide();
+					player = $("#username").val();
+					WarpClient.connect();
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="userlogin">
+			<input type="text" value="Enter your name" id="username" />
+			<input type="button" value="Begin" id="userbutton" />  
+		</div>
+		<div id="game">
+		</div>
+	</body>
+</html>
