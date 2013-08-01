@@ -14,10 +14,6 @@
 						console.log('connection result ' +result);
 				};
 				
-				this.onJoinZoneDone = function(result){
-						console.log('joinzone result ' +result);
-				};
-				
 				this.onDisconnectDone = function(result){
 						console.log('disconnect result ' +result);
 				};	
@@ -62,7 +58,7 @@
 				$("#userbutton").click(function(){
 					$("#userlogin").hide();
 					player = $("#username").val();
-					WarpClient.connect();
+					WarpClient.connect(player);
 				});
 			});
 		</script>
