@@ -6,18 +6,13 @@
 		<script>
 			var apiKey = "put your api key here";
 			var secretKey = "put your secret key here";
-			var roomId = "612183398";
+			var roomId = "put your room id here";
 
 			var player, opponent, turn;
 
 			function MyConnectionRequestListener() {
 				this.onConnectDone = function(result){
 						console.log('connection result ' +result);
-						WarpClient.joinZone(player);
-				};
-				
-				this.onJoinZoneDone = function(result){
-						console.log('joinzone result ' +result);
 						WarpClient.joinRoom(roomId);
 				};
 				
@@ -91,7 +86,7 @@
 				$("#userbutton").click(function(){
 					$("#userlogin").hide();
 					player = $("#username").val();
-					WarpClient.connect();
+					WarpClient.connect(player);
 				});
 			});
 		</script>
